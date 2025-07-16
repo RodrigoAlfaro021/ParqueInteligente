@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão de Registos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            margin: 0;
+            padding: 30px;
+            color: #ecf0f1;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        table {
+            width: 90%;
+            margin: 0 auto 40px;
+            border-collapse: collapse;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            width: 100px;
+            border-radius: 5px;
+        }
+
+        .acoes {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .acoes a {
+            display: inline-block;
+            padding: 12px 22px;
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .acoes a:hover {
+            background-color: #1e8449;
+            transform: scale(1.05);
+        }
+
+        .acoes form {
+            display: inline-block;
+        }
+
+        .acoes button {
+            padding: 12px 22px;
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .acoes button:hover {
+            background-color: #922b21;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Gestão de Registos da Base de Dados</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Imagem</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for id, imagem, data in dados %}
+            <tr>
+                <td>{{ id }}</td>
+                <td>{{ data }}</td>
+                <td>
+                    <img src="{{ url_for('servir_foto', filename=imagem) }}" alt="Imagem">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="acoes">
+        <a href="/">Voltar</a>
+        <form method="POST" action="/dados/limpar">
+            <button type="submit">Eliminar Todos os Registos</button>
+        </form>
+    </div>
+
+</body>
+</html>

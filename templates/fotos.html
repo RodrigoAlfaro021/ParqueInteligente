@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Fotos Capturadas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            padding: 30px;
+            margin: 0;
+            color: #ecf0f1;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: #ecf0f1;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .galeria {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .foto {
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            width: 300px;
+            transition: transform 0.3s ease;
+        }
+
+        .foto:hover {
+            transform: scale(1.03);
+        }
+
+        .foto img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .foto p {
+            margin: 0;
+            padding: 10px;
+            font-size: 14px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 25px;
+            background-color: #27ae60;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .voltar:hover {
+            background-color: #219150;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>Histórico de Fotos Capturadas</h1>
+
+    <div class="galeria">
+        {% for imagem in imagens %}
+        <div class="foto">
+            <img src="{{ url_for('servir_foto', filename=imagem) }}" alt="Foto capturada">
+            <p>{{ imagem }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a class="voltar" href="/">Voltar</a>
+</body>
+</html>

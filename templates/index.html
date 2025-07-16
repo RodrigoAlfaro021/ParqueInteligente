@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Parque de Estacionamento Inteligente</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            margin: 0;
+            padding: 30px;
+            color: #ecf0f1;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #ecf0f1;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .parque {
+            position: relative;
+            width: 800px;
+            margin: 40px auto;
+            background: #2d3436;
+            border: 5px solid #636e72;
+            padding: 40px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            border-radius: 15px;
+        }
+
+        .vaga-container {
+            position: relative;
+            width: 120px;
+            height: 200px;
+            background-color: #bdc3c7;
+            border: 3px dashed white;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .sensor-indicador {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: green;
+            border: 2px solid white;
+        }
+
+        .ocupada-indicador {
+            background-color: red;
+        }
+
+        .ultimas-fotos {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ecf0f1;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .ultimas-fotos h2 {
+            margin-bottom: 15px;
+        }
+
+        #ultima-data {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        #ultima-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 3px solid #ccc;
+        }
+
+        .acoes {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .acoes a {
+            display: inline-block;
+            padding: 12px 22px;
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .acoes a:hover {
+            background-color: #1e8449;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>Parque de Estacionamento Inteligente</h1>
+
+    <div class="parque" id="vagas-lista">
+        {% for vaga in vagas %}
+            <div class="vaga-container">
+                <div class="sensor-indicador {% if vaga %}ocupada-indicador{% endif %}"></div>
+                Vaga {{ loop.index }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="ultimas-fotos">
+        <h2>Última Entrada</h2>
+        <p id="ultima-data">Aguardando captura...</p>
+        <img id="ultima-img" src="" alt="Sem imagem ainda">
+    </div>
+
+    <div class="acoes">
+        <a href="#" onclick="abrirManual()">Abrir Cancela</a>
+        <a href="/fotos">Ver Todas as Fotos</a>
+        <a href="/dados">Gestão de fotos</a>
+        
+    </div>
+    <script>
+         function abrirManual() {
+             fetch('/entrada')
+            .then(res => res.text())
+            .then(msg => alert(msg));
+            }
+    </script>
+    <script>
+        function atualizarVagas() {
+            fetch('/api/vagas')
+                .then(response => response.json())
+                .then(data => {
+                    const sensores = document.querySelectorAll('.sensor-indicador');
+                    data.forEach((ocupada, index) => {
+                        if (ocupada) {
+                            sensores[index].classList.add('ocupada-indicador');
+                        } else {
+                            sensores[index].classList.remove('ocupada-indicador');
+                        }
+                    });
+                });
+        }
+
+        setInterval(atualizarVagas, 1000);
+    </script>
+    <script>
+        function atualizarUltimaImagem() {
+            fetch('/api/ultima_entrada')
+            .then(res => res.json())
+            .then(data => {
+                if (data.imagem) {
+                    const novaURL = `/fotos/${data.imagem}?t=${new Date().getTime()}`;
+                    document.getElementById('ultima-img').src = novaURL;
+                    document.getElementById('ultima-data').textContent = data.data;
+                }
+            });
+        }
+
+        setInterval(atualizarUltimaImagem, 3000);
+    </script>
+</body>
+</html>
